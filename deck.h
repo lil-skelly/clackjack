@@ -25,7 +25,5 @@ Card getTopCard(Deck *deck);
 void removeTopCard(Deck *deck);
 Card drawCard(Deck *deck);
 
-int evaluateHand(Card hand[]);
-
 void printCard(Card card);
 #endif // DECK_H
