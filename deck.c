@@ -35,6 +35,11 @@ void shuffleDeck(Deck *deck) {
     }
 }
 
+void prepareDeck(Deck *deck) {
+    initializeDeck(deck);
+    shuffleDeck(deck);
+}
+
 Card getTopCard(Deck *deck) {
     if (deck->top >= DECK_SIZE) {
         printf("Deck empty. Cannot remove card\n");

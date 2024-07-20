@@ -20,6 +20,7 @@ typedef struct {
 // Function declarations
 void initializeDeck(Deck *deck);
 void shuffleDeck(Deck *deck);
+void prepareDeck(Deck *deck);
 
 Card getTopCard(Deck *deck);
 void removeTopCard(Deck *deck);
