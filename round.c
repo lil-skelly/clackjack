@@ -14,8 +14,8 @@ Choice getPlayerChoice(Choice choices[], int num_choices) {
         scanf("%i\n", &input);
         for (int i=0; i<num_choices; i++) {
             if (input == choices[i].id) {
-                selected_choice = choices[i];
                 printf("Selected choice with id %d", selected_choice.id);
+                memcpy(&selected_choice, &choices[i], sizeof(Choice));
                 break;
             }
         }
