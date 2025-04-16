@@ -1,87 +1,81 @@
-#include "round.h"
+#include "include/round.h"
 
-static int next_id = 1;
+void populateChoice(Choice *choice, const char *description, int value) {
+  strcpy(choice->description, description);
+  choice->value = value;
+}
 
-Choice getPlayerChoice(Choice choices[], int num_choices) {
-    int input;
-    Choice selected_choice;
+void initializeBJChoices(Choice *choices) {
+  for (int i = 0; i < C_COUNT; i++) {
+    populateChoice(&choices[i], choiceDescriptions[i], choiceValues[i]);
+  }
+}
 
+int isUserSelectionValid(Choice choices[], int input) {
+  for (int i = 0; i < C_COUNT; i++) {
+    if (choiceValues[i] == input)
+      return 1;
+  }
+  return 0;
+}
+
+Choice getPlayerChoice(Choice choices[]) {
+  int input;
+  Choice selected_choice;
+
+  while (1) {
     printf("Choose an option: \n");
-    printChoices(choices, num_choices);
-
-    while (1) {
-        printf("CJ > ");
-        scanf("%i\n", &input);
-        for (int i=0; i<num_choices; i++) {
-            if (input == choices[i].id) {
-                printf("Selected choice with id %d", selected_choice.id);
-                memcpy(&selected_choice, &choices[i], sizeof(Choice));
-                break;
-            }
-        }
+    printChoices(choices);
+    if (scanf("%d", &input) != 1) {
+      printf("Invalid input. Please enter a number.\n");
+      while (getchar() != "\n")
+        ;
+      continue;
     }
-    return selected_choice;
-}
 
-int isUserSelectionValid(Choice choices[], int num_choices, int input) {
-    for (int i=0; i<num_choices; i++) {
-        if (input == choices[i].id) {
-            return 1;
-        }
+    for (int i = 0; i < C_COUNT; i++) {
+      if (input == choices[i].value) {
+        return choices[i];
+      }
     }
-    return 0;
+  }
+
+  printf("Invalid selection. Please try again.\n");
+
+  return selected_choice;
 }
 
-void printChoices(Choice choices[], int num_choices) {
-    for (int i=0; i<num_choices; i++) {
-        printf("> %s (%d)\n", choices[i].description, choices[i].id);
-    }
+void printChoices(Choice choices[]) {
+  for (int i = 0; i < C_COUNT; i++) {
+    printf("> %s (%d)\n", choices[i].description, choices[i].value);
+  }
 }
 
-void populateChoice(Choice *choice, char description[], int value) {
-    strcpy(choice->description, description);
-    
-    choice->value = value;
-    choice->id = getNextChoiceID();
-}
+void playTurn(Player *player, Deck *deck, Choice *choices) {
+  Choice player_choice;
+  player_choice = getPlayerChoice(choices);
 
-int getNextChoiceID() {
-    return next_id++;
-}
+  int hand_size = getHandSize(player->hand);
 
-void initializeBJChoices(Choice* choices) {
-    populateChoice(&choices[0], "Stand", C_STAND);
-    populateChoice(&choices[1], "Hit", C_HIT);
-    populateChoice(&choices[2], "Double Down", C_DDOWN);
-    populateChoice(&choices[3], "Split", C_SPLIT);
-    populateChoice(&choices[4], "Surrender", C_SURRENDER);
-}
+  switch (player_choice.value) {
+  case C_HIT:
+    hit(deck, player);
+    break;
+  case C_STAND:
+    stand(deck, player);
+    break;
+  case C_DDOWN:
+    double_down(deck, player);
+    break;
+  case C_SPLIT:
+    split(deck, player);
+    break;
+  case C_SURRENDER:
+    surrender();
 
-void playTurn(Player* player, Deck* deck, Choice* choices) {
-    Choice player_choice;
-    player_choice = getPlayerChoice(choices, sizeof(choices) / sizeof(Choice));
-
-    int hand_size = getHandSize(player->hand);
-    
-    switch (player_choice.value)
-    {
-    case C_HIT:
-        hit(deck, player);
-        break;
-    case C_STAND:
-        stand(deck, player);
-        break;
-    case C_DDOWN:
-        double_down(deck, player);
-        break;
-    case C_SPLIT:
-        split(deck, player);
-        break;
-    case C_SURRENDER:
-        surrender();
-
-    default:
-        fprintf(stderr, "Invalid choice with ID: %d\n", player_choice.id);
-        break;
-    }
+  default:
+    fprintf(stderr, "Invalid choice with ID: %d (%s) \n", player_choice.value,
+            player_choice.description);
+    break;
+  }
 }
