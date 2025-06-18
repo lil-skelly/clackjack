@@ -1,14 +1,14 @@
 #include "include/round.h"
 
-void populateChoice(Choice *choice, const char *description, int value) {
-  strcpy(choice->description, description);
-  choice->value = value;
-}
-
 void initializeBJChoices(Choice *choices) {
   for (int i = 0; i < C_COUNT; i++) {
     populateChoice(&choices[i], choiceDescriptions[i], choiceValues[i]);
   }
+}
+
+void populateChoice(Choice *choice, const char *description, int value) {
+  strcpy(choice->description, description);
+  choice->value = value;
 }
 
 int isUserSelectionValid(Choice choices[], int input) {
@@ -24,12 +24,11 @@ Choice getPlayerChoice(Choice choices[]) {
   Choice selected_choice;
 
   while (1) {
-    printf("Choose an option: \n");
+    printf("Choose an option:\n");
     printChoices(choices);
     if (scanf("%d", &input) != 1) {
       printf("Invalid input. Please enter a number.\n");
-      while (getchar() != "\n")
-        ;
+      while (getchar() != "\n");
       continue;
     }
 
@@ -51,24 +50,24 @@ void printChoices(Choice choices[]) {
   }
 }
 
-void playTurn(Player *player, Deck *deck, Choice *choices) {
+void playTurn(Player *player, Deck *deck, Choice *choices, Card **hand) {
   Choice player_choice;
   player_choice = getPlayerChoice(choices);
 
-  int hand_size = getHandSize(player->hand);
+  int hand_size = getHandSize(*hand);
 
   switch (player_choice.value) {
   case C_HIT:
-    hit(deck, player);
+    hit(deck, hand);
     break;
   case C_STAND:
-    stand(deck, player);
+    stand(deck, hand);
     break;
   case C_DDOWN:
-    double_down(deck, player);
+    double_down(deck, hand);
     break;
   case C_SPLIT:
-    split(deck, player);
+    split(deck, hand);
     break;
   case C_SURRENDER:
     surrender();

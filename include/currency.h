@@ -23,7 +23,7 @@ typedef struct {
 // Function declarations
 void applyCurrencyChange(Currency *currency, int amount);
 void initializeCurrency(Currency *player_currency);
-void placeBet(Currency *player_currency, int bet_amount);
+void placeBet(Currency *player_currency);
 void updateCurrency(Currency *currency, int amount, int player_id);
 void printCurrency(Currency currency, int player_id);
 void hBetOutcome(Currency *currency, BET_OUTCOME outcome,

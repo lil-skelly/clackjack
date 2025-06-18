@@ -48,6 +48,5 @@ void populateChoice(Choice *choice, const char *description, int value);
 
 void initializeBJChoices(Choice *choices);
 
-void playTurn(Player *player, Deck *deck, Choice *choices);
-
+void playTurn(Player *player, Deck *deck, Choice *choices, Card **hand);
 #endif // ROUND_H

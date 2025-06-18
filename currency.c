@@ -6,13 +6,31 @@ void initializeCurrency(Currency *player_currency) {
   player_currency->won = 0;
 }
 
-void placeBet(Currency *player_currency, int bet_amount) {
-  if ((player_currency->current_balance - bet_amount) < 0) {
-    printf("Not enough balance to place bet of %i\n", bet_amount);
-    return;
+void placeBet(Currency *player_currency) {
+  int bet_amount;
+  while (1) {
+    printf("Place your bet (Remaining balance: %d) [>] ", player_currency->current_balance);
+    if (scanf("%d", &bet_amount) != 1) {
+      puts("Invalid input. Please enter a number.");
+      while (getchar() != '\n');
+      continue;
+    }
+
+    if (bet_amount <= 0) {
+      puts("Bet must be greater than zero. Try again");
+    }
+
+    if ((player_currency->current_balance - bet_amount) < 0) {
+      printf("Not enough balance to place bet of %i\n", bet_amount);
+      continue;
+    }
+
+    break;
   }
+  
   player_currency->bet = bet_amount;
-  printf("Bet placed: %i\n", bet_amount);
+  player_currency->current_balance -= bet_amount;
+  printf("Bet placed: %d\n", bet_amount);
 }
 
 void hBetOutcome(Currency *currency, BET_OUTCOME multiplier,

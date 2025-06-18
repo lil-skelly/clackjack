@@ -6,10 +6,9 @@
 #include "hand.h"
 #include "player.h"
 
-void hit(Deck *deck, Player *player);
-
-void stand(Deck *deck, Player *player);
-void double_down(Deck *deck, Player *player);
-void split(Deck *deck, Player *player);
+void hit(Deck *deck, Card **hand);
+void stand(Deck *deck, Card **hand);
+void double_down(Deck *deck, Card **hand);
+void split(Deck *deck, Card **hand);
 void surrender();
 #endif // ACTIONS_H

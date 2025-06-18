@@ -11,4 +11,6 @@
 int evaluateHand(Card hand[]);
 void addCardToHand(Card **hand, Card new_card);
 int getHandSize(Card hand[]);
+void drawAndAddCards(Card **hand, Deck *deck, int n);
+
 #endif // HAND_H

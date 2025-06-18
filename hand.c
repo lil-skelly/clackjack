@@ -1,15 +1,24 @@
 #include "include/hand.h"
 
-void addCardToHand(Card **hand, Card new_card) {
-  int hand_size = getHandSize(*hand);
 
-  Card *new_hand = realloc(*hand, (hand_size + 1) * sizeof(Card));
+// Draw n cards and add them to hand
+void drawAndAddCards(Card **hand, Deck* deck, int n) {
+  if (n <= 0) return;
+  Card card = drawCard(deck);
+  addCardToHand(hand, card);
+  drawAndAddCards(hand, deck, n-1); 
+}
+
+void addCardToHand(Card **hand_ptr, Card new_card) {
+  int hand_size = getHandSize(*hand_ptr);
+
+  Card *new_hand = realloc(*hand_ptr, (hand_size + 1) * sizeof(Card));
   if (new_hand == NULL) {
     fprintf(stderr, "Error reallocating memory for hand\n");
     exit(1);
   }
   new_hand[hand_size] = new_card;
-  *hand = new_hand;
+  *hand_ptr = new_hand;
 }
 
 int evaluateHand(Card hand[]) {

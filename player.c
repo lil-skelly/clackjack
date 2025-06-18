@@ -23,16 +23,22 @@ void initializePlayer(Player *player, PLAYER_TYPE player_type, int id) {
   player->type = player_type;
   player->score = 0;
   player->id = id;
-  player->hand = (Card *)malloc(sizeof(Card));
-  if (player->hand == NULL) {
-    fprintf(stderr, "Error: Unable to allocate memory for player hand\n");
+  player->hand = malloc(MAX_HANDS * sizeof(Card *));
+  player->num_hands =1;
+  if (!player->hand) {
+    fprintf(stderr, "Error allocating memory for hands\n");
     exit(1);
   }
 
+  // Initialize first hand with START_HAND_SIZE cards
+  player->hand[0] = NULL;
   initializeCurrency(&player->currency);
 }
 
 void free_player(Player *player) {
+  for (int i=0; i<player->num_hands;i++) {
+    free(player->hand[i]);
+  }
   free(player->hand);
   free(player);
 }
